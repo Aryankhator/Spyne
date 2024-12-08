@@ -12,7 +12,6 @@ import RealmSwift
 
 struct CameraImagePicker: UIViewControllerRepresentable {
     @Binding var isPresented: Bool
-    @Binding var imageArray: [UIImage]
     
     class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
         let parent: CameraImagePicker
@@ -24,7 +23,6 @@ struct CameraImagePicker: UIViewControllerRepresentable {
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let image = info[.originalImage] as? UIImage {
                 parent.saveToDatabase(image: image)
-                parent.imageArray.append(image)
             }
             parent.isPresented = false
         }
