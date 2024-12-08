@@ -18,30 +18,33 @@ struct ImageListView: View {
         List {
             ForEach(images) { image in
                 HStack {
-                    if let uiImage = UIImage(contentsOfFile: image.imagePath) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 50, height: 50)
-                    }
-                    
+                    if let uiImage = loadImageFromDocumentDirectory(imageName: image.imagePath) {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50, height: 50)
+                        }
                     VStack(alignment: .leading) {
                         Text("Captured: \(image.captureDate.shortDate() )")
                             .font(.callout)
                         Text("Status: \(image.uploadStatus.rawValue)")
                             .font(.callout)
                     }
-                    
-                    Spacer()
-                    if image.uploadStatus == .failed {
-                        Button("Retry") {
-                            UploadManager.shared.upload(image: image)
-                        }
-                    }
                 }
             }
         }
+        .listStyle(.plain)
     }
+    func loadImageFromDocumentDirectory(imageName: String) -> UIImage? {
+        
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileURL = documentsDirectory.appendingPathComponent(imageName)
+        if FileManager.default.fileExists(atPath: fileURL.path) {
+            return UIImage(contentsOfFile: fileURL.path)
+        }
+        return nil
+    }
+
 }
 
 
