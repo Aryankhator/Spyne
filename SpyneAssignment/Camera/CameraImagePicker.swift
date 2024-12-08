@@ -5,9 +5,10 @@
 //
 // Created by Aryan on 08/12/24
 //
-        
+
 
 import SwiftUI
+import UIKit
 import RealmSwift
 
 struct CameraImagePicker: UIViewControllerRepresentable {
@@ -43,28 +44,40 @@ struct CameraImagePicker: UIViewControllerRepresentable {
         return picker
     }
     
-    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {
-    }
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
     
     private func saveToDatabase(image: UIImage) {
-          let imageName = UUID().uuidString + ".jpg"
-          let imagePath = FileManager.default.temporaryDirectory.appendingPathComponent(imageName)
-          guard let data = image.jpegData(compressionQuality: 0.8) else { return }
-          
-          do {
-              try data.write(to: imagePath)
-              let realm = try Realm()
-              let imageModel = ImageModel()
-              imageModel.id = UUID().uuidString
-              imageModel.imagePath = imagePath.path
-              imageModel.captureDate = Date()
-              try realm.write {
-                  realm.add(imageModel)
-              }
-          } catch {
-              print("Error saving image: \(error)")
-          }
-      }
+        let imageName = UUID().uuidString + ".jpg"
+        saveImageToDocumentDirectory(image: image, imageName: imageName)
+        guard let data = image.jpegData(compressionQuality: 0.8) else { return }
+        
+        do {
+            let imageModel = ImageModel()
+            imageModel.id = UUID().uuidString
+            imageModel.imagePath = imageName
+            imageModel.captureDate = Date()
+            let realm = try Realm()
+            try? realm.write {
+                realm.add(imageModel)
+            }
+            UploadManager.shared.upload(image: imageModel)
+        } catch {
+            print("Error saving image: \(error)")
+        }
+    }
+    func saveImageToDocumentDirectory(image: UIImage, imageName: String) {
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileURL = documentsDirectory.appendingPathComponent(imageName)
+        
+        if let data = image.jpegData(compressionQuality: 1.0), !FileManager.default.fileExists(atPath: fileURL.path) {
+            do {
+                try data.write(to: fileURL)
+                print("File saved at \(fileURL.path)")
+            } catch {
+                print("Error saving file: \(error)")
+            }
+        } else {
+            print("File already exists at \(fileURL.path)")
+        }
+    }
 }
-
-
