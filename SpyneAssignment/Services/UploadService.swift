@@ -20,8 +20,13 @@ final class UploadManager {
     }
 
     func upload(image: ImageModel) {
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        
+        let fileURL = documentsDirectory.appendingPathComponent(image.imagePath)
+        
+
         guard let url = URL(string: "https://www.clippr.ai/api/upload"),
-              let imageData = try? Data(contentsOf: URL(fileURLWithPath: image.imagePath)) else {
+              let imageData = try? Data(contentsOf: fileURL) else {
             print("Invalid image or URL.")
             return
         }
@@ -41,33 +46,37 @@ final class UploadManager {
         body.append("--\(boundary)--\r\n".data(using: .utf8)!)
 
         let task = session.uploadTask(with: request, from: body) { data, response, error in
-            let realm = try? Realm()
-            if let error = error {
-                print("Upload failed: \(error.localizedDescription)")
-                try? realm?.write {
-                    image.uploadStatus = .failed
+            DispatchQueue.main.async {
+                let realm = try? Realm()
+                do {
+                    try realm?.write {
+                        if let error = error {
+                            print("Upload failed: \(error.localizedDescription)")
+                            image.uploadStatus = .failed
+                        } else if let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
+                            print("Upload successful!")
+                            image.uploadStatus = .completed
+                        } else {
+                            print("Upload failed: Invalid response")
+                            image.uploadStatus = .failed
+                        }
+                    }
+                } catch {
+                    print("Realm write failed: \(error)")
                 }
-                return
-            }
-
-            guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-                print("Upload failed: Invalid response")
-                try? realm?.write {
-                    image.uploadStatus = .failed
-                }
-                return
-            }
-
-            print("Upload successful!")
-            try? realm?.write {
-                image.uploadStatus = .completed
             }
         }
         task.resume()
-        let realm = try? Realm()
-        try? realm?.write {
-            image.uploadStatus = .uploading
+
+        DispatchQueue.main.async {
+            let realm = try? Realm()
+            do {
+                try realm?.write {
+                    image.uploadStatus = .uploading
+                }
+            } catch {
+                print("Error updating status to uploading: \(error)")
+            }
         }
     }
 }
-
