@@ -6,13 +6,30 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		9287A7E92D05B83500DA9110 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9287A7E82D05B83500DA9110 /* RealmSwift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		9287A7C32D059F4600DA9110 /* SpyneAssignment.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpyneAssignment.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		9287A7EB2D05B97B00DA9110 /* Exceptions for "SpyneAssignment" folder in "SpyneAssignment" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 9287A7C22D059F4600DA9110 /* SpyneAssignment */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		9287A7C52D059F4600DA9110 /* SpyneAssignment */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9287A7EB2D05B97B00DA9110 /* Exceptions for "SpyneAssignment" folder in "SpyneAssignment" target */,
+			);
 			path = SpyneAssignment;
 			sourceTree = "<group>";
 		};
@@ -23,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9287A7E92D05B83500DA9110 /* RealmSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +83,7 @@
 			);
 			name = SpyneAssignment;
 			packageProductDependencies = (
+				9287A7E82D05B83500DA9110 /* RealmSwift */,
 			);
 			productName = SpyneAssignment;
 			productReference = 9287A7C32D059F4600DA9110 /* SpyneAssignment.app */;
@@ -94,6 +113,9 @@
 			);
 			mainGroup = 9287A7BA2D059F4600DA9110;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9287A7E72D05B83500DA9110 /* XCRemoteSwiftPackageReference "realm-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9287A7C42D059F4600DA9110 /* Products */;
 			projectDirPath = "";
@@ -250,6 +272,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"SpyneAssignment/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SpyneAssignment/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -287,6 +310,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"SpyneAssignment/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SpyneAssignment/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -335,6 +359,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9287A7E72D05B83500DA9110 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9287A7E82D05B83500DA9110 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9287A7E72D05B83500DA9110 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9287A7BB2D059F4600DA9110 /* Project object */;
 }

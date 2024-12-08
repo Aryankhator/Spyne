@@ -8,7 +8,7 @@
         
 
 import SwiftUI
-
+import RealmSwift
 
 struct CameraImagePicker: UIViewControllerRepresentable {
     @Binding var isPresented: Bool
@@ -23,6 +23,7 @@ struct CameraImagePicker: UIViewControllerRepresentable {
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let image = info[.originalImage] as? UIImage {
+                parent.saveToDatabase(image: image)
                 parent.imageArray.append(image)
             }
             parent.isPresented = false
@@ -46,6 +47,26 @@ struct CameraImagePicker: UIViewControllerRepresentable {
     
     func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {
     }
+    
+    private func saveToDatabase(image: UIImage) {
+          let imageName = UUID().uuidString + ".jpg"
+          let imagePath = FileManager.default.temporaryDirectory.appendingPathComponent(imageName)
+          guard let data = image.jpegData(compressionQuality: 0.8) else { return }
+          
+          do {
+              try data.write(to: imagePath)
+              let realm = try Realm()
+              let imageModel = ImageModel()
+              imageModel.id = UUID().uuidString
+              imageModel.imagePath = imagePath.path
+              imageModel.captureDate = Date()
+              try realm.write {
+                  realm.add(imageModel)
+              }
+          } catch {
+              print("Error saving image: \(error)")
+          }
+      }
 }
 
 
